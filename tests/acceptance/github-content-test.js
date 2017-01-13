@@ -40,3 +40,21 @@ test('finding content that is a simple file without authorization', function(ass
     })
   });
 });
+
+test('finding the contents of a directory without authorization', function(assert) {
+  server.get('/repos/user1/repository1/contents/dir', () => {
+    return [200, {}, [
+      Factory.build('content'),
+      Factory.build('content')
+    ]];
+  });
+
+  return run(() => {
+    return store.findRecord('github-content', '/dir').then(content => {
+      assertGithubContentOk(assert, content.toArray()[0]);
+      assert.equal(store.peekAll('github-content').get('length'), 2);
+      assert.equal(server.handledRequests.length, 1);
+      assert.equal(server.handledRequests[0].requestHeaders.Authorization, undefined);
+    })
+  });
+});
