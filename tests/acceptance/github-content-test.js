@@ -27,12 +27,15 @@ moduleForAcceptance('Acceptance | github content', {
 });
 
 test('finding content that is a simple file without authorization', function(assert) {
-  server.get('/repos/user1/repository1/contents/dir/file.js', () => {
+  server.get('/repos/user1/repository1/contents/dir/file.js?ref=master', () => {
     return [200, {}, Factory.build('content')];
   });
 
   return run(() => {
-    return store.findRecord('github-content', '/dir/file.js').then(content => {
+    return store.queryRecord('github-content', {
+      path: '/dir/file.js',
+      ref: 'master'
+    }).then(content => {
       assertGithubContentOk(assert, content);
       assert.equal(store.peekAll('github-content').get('length'), 1);
       assert.equal(server.handledRequests.length, 1);
@@ -42,7 +45,7 @@ test('finding content that is a simple file without authorization', function(ass
 });
 
 test('finding the contents of a directory without authorization', function(assert) {
-  server.get('/repos/user1/repository1/contents/dir', () => {
+  server.get('/repos/user1/repository1/contents/dir?ref=master', () => {
     return [200, {}, [
       Factory.build('content'),
       Factory.build('content')
@@ -50,7 +53,10 @@ test('finding the contents of a directory without authorization', function(asser
   });
 
   return run(() => {
-    return store.findRecord('github-content', '/dir').then(content => {
+    return store.query('github-content', {
+      path: '/dir',
+      ref: 'master'
+    }).then(content => {
       assertGithubContentOk(assert, content.toArray()[0]);
       assert.equal(store.peekAll('github-content').get('length'), 2);
       assert.equal(server.handledRequests.length, 1);
