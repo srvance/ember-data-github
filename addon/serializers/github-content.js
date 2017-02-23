@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import GithubSerializer from './github';
 
 export default GithubSerializer.extend({
@@ -16,7 +15,6 @@ export default GithubSerializer.extend({
       downloadUrl: resourceHash.download_url
     };
 
-    let result = this._super(modelClass, normalizedHash, prop);
-    return result;
+    return this._super(modelClass, normalizedHash, prop);
   }
 });
