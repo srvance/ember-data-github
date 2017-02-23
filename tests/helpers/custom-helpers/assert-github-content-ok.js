@@ -3,7 +3,7 @@ import Ember from 'ember';
 export default Ember.Test.registerHelper(
   'assertGithubContentOk',
   function (app, assert, content) {
-    assert.ok(content.get('type'));
+    assert.ok(content.get('fileType'));
     assert.ok(content.get('size'));
     assert.ok(content.get('name'));
     assert.ok(content.get('path'));

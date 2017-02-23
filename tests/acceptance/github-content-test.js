@@ -27,25 +27,26 @@ moduleForAcceptance('Acceptance | github content', {
 });
 
 test('finding content that is a simple file without authorization', function(assert) {
-  server.get('/repos/user1/repository1/contents/dir/file.js?ref=master', () => {
+  server.get('/repos/user1/repository1/contents/dir/file.js', () => {
     return [200, {}, Factory.build('content')];
   });
 
   return run(() => {
     return store.queryRecord('github-content', {
+      repo: 'user1/repository1',
       path: '/dir/file.js',
       ref: 'master'
     }).then(content => {
       assertGithubContentOk(assert, content);
-      assert.equal(store.peekAll('github-content').get('length'), 1);
-      assert.equal(server.handledRequests.length, 1);
-      assert.equal(server.handledRequests[0].requestHeaders.Authorization, undefined);
+      assert.equal(store.peekAll('github-content').get('length'), 1, 'One entity');
+      assert.equal(server.handledRequests.length, 1, 'One request made');
+      assert.equal(server.handledRequests[0].requestHeaders.Authorization, undefined, 'Undefined auth header');
     })
   });
 });
 
 test('finding the contents of a directory without authorization', function(assert) {
-  server.get('/repos/user1/repository1/contents/dir?ref=master', () => {
+  server.get('/repos/user1/repository1/contents/dir', () => {
     return [200, {}, [
       Factory.build('content'),
       Factory.build('content')
@@ -54,6 +55,7 @@ test('finding the contents of a directory without authorization', function(asser
 
   return run(() => {
     return store.query('github-content', {
+      repo: 'user1/repository1',
       path: '/dir',
       ref: 'master'
     }).then(content => {
