@@ -72,7 +72,8 @@ this.get('store').findRecord('github-branch', 'jimmay5469/old-hash/branches/mast
 this.get('store').queryRecord('github-branch', { repo: 'jimmay5469/old-hash', branch: 'master' }); // get a specific branch
 this.get('store').query('github-branch', { repo: 'jimmay5469/old-hash' }); // get a repo's branches
 this.get('store').queryRecord('github-release', { repo: 'jimmay5469/old-hash', releaseId: 1 }); // get a specific release
-this.get('store').query('github-release', { repo: 'jimmay5469/old-hash' }) // get a repo's releases
+this.get('store').query('github-release', { repo: 'jimmay5469/old-hash' }); // get a repo's releases
+this.get('store').query('github-content', { repo: 'jimmay5469/old-hash', path: '/', ref: 'master'}); // get the path's contents
 ```
 
 ## Contributing
